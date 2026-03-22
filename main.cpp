@@ -79,7 +79,55 @@ vector<int> romanSort(vector<int> A) {
     return B;
 }
 
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        cout << "Uporaba: vaja1 <opcija> <vhodna_datoteka>" << endl;
+        return 1;
+    }
 
-int main(){
+    string opcija = argv[1];
+    string imeDatoteke = argv[2];
+
+    ifstream vhod(imeDatoteke);
+    if (!vhod) {
+        cout << "Napaka pri odpiranju vhodne datoteke." << endl;
+        return 1;
+    }
+
+    vector<int> A;
+    int x;
+
+    while (vhod >> x) {
+        A.push_back(x);
+    }
+
+    vhod.close();
+
+    vector<int> rezultat;
+
+    if (opcija == "0") {
+        rezultat = countingSort(A);
+    } else if (opcija == "1") {
+        rezultat = romanSort(A);
+    } else {
+        cout << "Napacna opcija. Uporabi 0 ali 1." << endl;
+        return 1;
+    }
+
+    ofstream izhod("out.txt");
+    if (!izhod) {
+        cout << "Napaka pri pisanju v out.txt." << endl;
+        return 1;
+    }
+
+    for (int i = 0; i < (int)rezultat.size(); i++) {
+        izhod << rezultat[i];
+        if (i != (int)rezultat.size() - 1) {
+            izhod << " ";
+        }
+    }
+
+    izhod.close();
+
     return 0;
 }
