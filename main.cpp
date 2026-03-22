@@ -45,6 +45,40 @@ vector<int> countingSort(vector<int> A) {
     return B;
 }
 
+vector<int> romanSort(vector<int> A) {
+    if (A.empty()) return A;
+
+    int min = A[0];
+    int max = A[0];
+
+    for (int i = 1; i < (int)A.size(); i++) {
+        if (A[i] < min) min = A[i];
+        if (A[i] > max) max = A[i];
+    }
+
+    for (int i = 0; i < (int)A.size(); i++) {
+        A[i] = A[i] - min;
+    }
+
+    int range = max - min + 1;
+
+    vector<int> C(range, 0);
+    vector<int> B;
+
+    for (int i = 0; i < (int)A.size(); i++) {
+        C[A[i]]++;
+    }
+
+    for (int i = 0; i < range; i++) {
+        while (C[i] > 0) {
+            B.push_back(i + min);
+            C[i]--;
+        }
+    }
+
+    return B;
+}
+
 
 int main(){
     return 0;
