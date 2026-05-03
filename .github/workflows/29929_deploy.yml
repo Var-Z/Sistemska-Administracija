@@ -1,0 +1,28 @@
+name: Dostava kode - Deploy (29929)
+on:
+  workflow_run:
+    workflows: ["Sprotna integracija - Testiranje (29929)"]
+    types: [completed]
+    branches: [main]
+jobs:
+  deploy_docker:
+    runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: artefakt-napaka
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prijava v DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Gradnja in objava na DockerHub
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/vaja-cicd:latest
