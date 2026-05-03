@@ -1,0 +1,36 @@
+name: Sprotna integracija - Testiranje (29929)
+on:
+  push:
+    branches: [ main ]
+jobs:
+  job1_preveri_skripte:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preveri skripte
+        run: ls tests/* 2> napaka.txt > /dev/null || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artefakt-napaka
+          path: napaka.txt
+
+  job2_izvedi_teste:
+    needs: job1_preveri_skripte
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        okolje: [ubuntu-latest, debian] 
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: artefakt-napaka
+      - name: Preveri napake in testiraj
+        run: |
+          if [ -s napaka.txt ]; then
+            echo "Napaka: Testi ne obstajajo!"
+            exit 1
+          else
+            echo "Testi najdeni. Okolje iz matrice: ${{ matrix.okolje }}"
+            bash tests/test.sh
+          fi
