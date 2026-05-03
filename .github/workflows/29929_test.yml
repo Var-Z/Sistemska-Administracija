@@ -32,5 +32,5 @@ jobs:
             exit 1
           else
             echo "Testi najdeni. Okolje iz matrice: ${{ matrix.okolje }}"
-            bash tests/test.sh
+            bash test.sh
           fi
