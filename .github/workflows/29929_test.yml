@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Preveri skripte
-        run: ls test.sh 2> napaka.txt > /dev/null || true
+        run: ls tests/test.sh 2> napaka.txt > /dev/null || true
       - uses: actions/upload-artifact@v4
         with:
           name: artefakt-napaka
@@ -19,7 +19,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        okolje: [ubuntu-latest, debian] 
+        okolje: [test1, test2] 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -28,9 +28,9 @@ jobs:
       - name: Preveri napake in testiraj
         run: |
           if [ -s napaka.txt ]; then
-            echo "Napaka: Testi ne obstajajo!"
+            echo "Napaka: Testne skripte ne obstajajo!"
             exit 1
           else
             echo "Testi najdeni. Okolje iz matrice: ${{ matrix.okolje }}"
-            bash test.sh
+            bash tests/test.sh
           fi
