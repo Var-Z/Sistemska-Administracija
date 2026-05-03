@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Preveri skripte
-        run: ls tests/* 2> napaka.txt > /dev/null || true
+        run: ls test.sh 2> napaka.txt > /dev/null || true
       - uses: actions/upload-artifact@v4
         with:
           name: artefakt-napaka
